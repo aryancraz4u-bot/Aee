@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121214">
+  <meta name="description" content="A dark, neon-inspired 303 acid bassline synthesizer and rhythm workstation interface.">
+  <title>303 — Acid Bassline Workstation</title>
+  <style>
+    :root{color-scheme:dark;--bg:#121214;--panel:#1c1c21;--green:#00ffcc;--orange:#ff5500;--text:#e0e0e6;--dim:#9292a0}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(ellipse at 50% 0,#073b35 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;align-items:center;flex-direction:column}
+    header{text-align:center;margin:14px 0 25px}h1{margin:0;color:var(--green);font-size:clamp(2.6rem,8vw,4rem);line-height:1;letter-spacing:.2em;text-shadow:0 0 18px #00ffcc55}header p{margin:10px 0 0;color:var(--dim);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}
+    main{width:min(100%,960px);padding:24px;background:linear-gradient(145deg,#202027,var(--panel));border:1px solid #373744;border-radius:16px;box-shadow:0 18px 55px #0008}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;margin-bottom:24px}.tags,.transport,.knobs{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.tag{padding:7px 12px;border-radius:20px;background:#292932;color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.tag.selected{color:var(--green);border:1px solid #00ffcc55}
+    button{font:inherit;cursor:pointer;color:var(--text);background:#292932;border:1px solid #ffffff20;border-radius:8px;padding:9px 13px}button:hover,button:focus-visible{border-color:var(--green);outline:2px solid #00ffcc33}button[aria-pressed=true]{color:var(--green)}
+    .knobbox{display:grid;justify-items:center;gap:7px;min-width:55px;color:var(--dim);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase}.knob{height:45px;width:45px;border-radius:50%;border:2px solid #ffffff25;background:radial-gradient(circle at 35% 30%,#55556a,#282832 65%);position:relative;box-shadow:0 5px 12px #0008}.knob:after{content:"";position:absolute;top:5px;left:20px;height:12px;width:3px;border-radius:3px;background:var(--green);transform:rotate(30deg);transform-origin:2px 18px}
+    .columns{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(230px,.65fr);gap:18px}.panel{padding:18px;border:1px solid #ffffff18;border-radius:12px;background:#11111655}.panel h2{display:flex;justify-content:space-between;margin:0 0 15px;color:var(--dim);font-size:.72rem;font-weight:650;letter-spacing:.12em;text-transform:uppercase}.sequencer{overflow-x:auto}.steps{display:grid;grid-template-columns:48px repeat(16,minmax(18px,1fr));gap:7px;min-width:570px}.label{display:grid;place-items:center;min-height:31px;color:var(--dim);font-size:.65rem}.step{height:31px;padding:0;border-radius:6px;background:#ffffff09;border:1px solid #ffffff16}.step.on{background:linear-gradient(#00ffcc,#079b89);box-shadow:0 0 10px #00ffcc40}.step.accent{background:linear-gradient(#ff7435,#a93208);border-color:#ff550077}.side{display:grid;gap:18px}.scope{height:145px;border:1px solid #00ffcc35;border-radius:9px;overflow:hidden;background:repeating-linear-gradient(0deg,transparent 0 19px,#ffffff0b 20px),repeating-linear-gradient(90deg,transparent 0 19px,#ffffff0b 20px),#00ffcc0a;position:relative}.trace{position:absolute;inset:20% 0 25%;background:linear-gradient(180deg,#00ffccaa,#00ffcc11);clip-path:polygon(0 60%,5% 48%,10% 56%,16% 25%,23% 36%,31% 55%,39% 20%,46% 45%,53% 66%,61% 40%,68% 12%,76% 32%,84% 22%,91% 55%,100% 35%,100% 100%,0 100%)}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:11px;text-align:center;border-radius:8px;background:#ffffff08;color:var(--dim);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}.stat b{display:block;color:var(--text);font-size:1rem;margin-top:5px}.note{margin:16px 0 0;color:var(--dim);font-size:.72rem;text-align:center}
+    @media(max-width:700px){body{padding:14px}main{padding:15px}.columns{grid-template-columns:1fr}.top{align-items:flex-start}.steps{grid-template-columns:40px repeat(16,minmax(18px,1fr))}}
+  </style>
+</head>
+<body>
+  <header><h1>303</h1><p>Acid Bassline Synthesizer &amp; Rhythm Workstation</p></header>
+  <main>
+    <div class="top">
+      <div class="tags"><span class="tag">Program</span><span class="tag selected">Acid</span><span class="tag">Drumline</span></div>
+      <div class="transport" aria-label="Transport controls"><button type="button" aria-label="Rewind">⏮</button><button type="button" aria-label="Stop">⏹</button><button type="button" id="play" aria-label="Play" aria-pressed="false">▶</button><button type="button" aria-label="Forward">⏭</button></div>
+      <div class="knobs"><div class="knobbox"><span class="knob"></span>Tempo</div><div class="knobbox"><span class="knob"></span>Drive</div><div class="knobbox"><span class="knob"></span>Master</div></div>
+    </div>
+    <div class="columns">
+      <section class="panel sequencer"><h2><span>Sequencer</span><span>16 Steps</span></h2><div class="steps" id="steps" aria-label="16-step sequencer"></div></section>
+      <aside class="side">
+        <section class="panel"><h2><span>Oscilloscope</span><span>Visual</span></h2><div class="scope" aria-hidden="true"><div class="trace"></div></div></section>
+        <section class="panel"><h2><span>Performance</span><span>Mono</span></h2><div class="stats"><div class="stat">Cutoff<b>78%</b></div><div class="stat">Reso<b>0.42</b></div><div class="stat">Tune<b>-3</b></div><div class="stat">Swing<b>14%</b></div></div></section>
+      </aside>
+    </div>
+    <p class="note">Interactive visual demo — audio synthesis and knob controls are not connected yet.</p>
+  </main>
+  <script>
+    const patterns={Bass:[0,2,4,5,7,9,11,12,14],Drum:[0,3,6,8,11,14],FX:[1,4,7,9,12,15]};
+    const grid=document.querySelector('#steps');
+    const empty=document.createElement('span');empty.className='label';grid.append(empty);
+    for(let i=1;i<=16;i++){const cell=document.createElement('span');cell.className='label';cell.textContent=i;grid.append(cell)}
+    for(const [name,active] of Object.entries(patterns)){
+      const label=document.createElement('span');label.className='label';label.textContent=name;grid.append(label);
+      for(let i=0;i<16;i++){
+        const button=document.createElement('button');button.type='button';button.className='step'+(active.includes(i)?(name==='Drum'?' accent':' on'):'');button.setAttribute('aria-label',`${name}, step ${i+1}`);button.setAttribute('aria-pressed',String(active.includes(i)));
+        button.addEventListener('click',()=>{button.classList.toggle('on');button.classList.remove('accent');button.setAttribute('aria-pressed',String(button.classList.contains('on')))});grid.append(button);
+      }
+    }
+    document.querySelector('#play').addEventListener('click',event=>{const button=event.currentTarget;const playing=button.getAttribute('aria-pressed')==='true';button.setAttribute('aria-pressed',String(!playing));button.textContent=playing?'▶':'⏸'});
+  </script>
+</body>
+</html>
